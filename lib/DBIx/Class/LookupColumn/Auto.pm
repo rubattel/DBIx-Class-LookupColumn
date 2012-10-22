@@ -10,11 +10,11 @@ DBIx::Class::LookupColumn::Auto - A dbic component for installing LookupColumn r
 
 =head1 VERSION
 
-Version 0.01
+Version 0.03
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.03';
 
 use base qw(DBIx::Class);
 
@@ -29,7 +29,7 @@ use DBIx::Class::LookupColumn::LookupColumnComponent;
 
  package MySchema; 
 
- __PACKAGE__->load_components( qw/+DBIx::Class::LookupColumn::Auto/ );
+ __PACKAGE__->load_components( qw/LookupColumn::Auto/ );
 
  my @tables = __PACKAGE__->sources; # get all table names 
  
@@ -47,7 +47,7 @@ use DBIx::Class::LookupColumn::LookupColumnComponent;
 		lc( $1 );
 	},
 	# function that gives the name of the column that holds the definitions/values: here it is always 'name'
-	lookup_field_name => sub { 'name' } 
+	lookup_field_name_builder => sub { 'name' } 
  );
 
 
@@ -86,6 +86,7 @@ An ArrayRef of the names of the Lookup tables.
 =item relation_name_builder?
 
 Optional. FuncRef for building the accessors base name. By default the name of the Lookup table in small caps.
+Arguments (hash keys) : { target => ?, lookup => ?, foreign_key => ? }.
 
 =item lookup_field_name_builder?
 
@@ -110,9 +111,9 @@ sub add_lookups {
     my $lookups_array_ref	= exists ( $args{lookups} ) ? $args{lookups} : confess 'lookups arg is missing';
         
 	my $options = {};
-    if ( exists ( $args{relation_name_builder} ) ){  $options->{relation_name_builder}	= $args{relation_name_builder} ;}
+    if ( exists ( $args{relation_name_builder} ) )	{  $options->{relation_name_builder}	= $args{relation_name_builder} ;}
     if ( exists ( $args{lookup_field_name_builder})){ $options->{lookup_field_name_builder}	= $args{lookup_field_name_builder};}
-    if ( exists ( $args{verbose} )				  ){ $options->{verbose}	= $args{verbose}									;}
+    if ( exists ( $args{verbose} )				  )	{ $options->{verbose}	= $args{verbose}									;}
     
     my $defaults = {  
     				relation_name_builder => \&_guess_relation_name,
@@ -188,7 +189,7 @@ sub _target2lookups {
 			next unless $info->{attrs}->{accessor} eq 'single'; # heuristic to detect belongs_to relation
 			
 			$relationships{$target}->{$fk} = $lookups{$info->{source}};
-		}	
+		}
 	}
 	
 	return \%relationships;

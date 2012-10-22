@@ -9,11 +9,11 @@ DBIx::Class::LookupColumn::LookupColumnComponent - A dbic component for building
 
 =head1 VERSION
 
-Version 0.01
+Version 0.03
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.03';
 
 use base qw(DBIx::Class);
 use Carp qw(confess);
@@ -160,7 +160,7 @@ is equals to 'Guest'.
 sub add_lookup {
     my ( $class, $relname, $foreign_key, $lookup_table, $options ) = @_;
     
- 	#### add_lookup relation_name, foreign_key, lookup_table, options: $relation_name, $foreign_key, $lookup_table, $options
+ 	#### add_lookup relation_name, foreign_key, lookup_table, options: $relname, $foreign_key, $lookup_table, $options
  
     # as it suggests $options is an optional argument
    	$options ||= {};
