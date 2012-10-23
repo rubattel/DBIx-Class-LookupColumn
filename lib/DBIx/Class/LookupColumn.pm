@@ -8,7 +8,7 @@ DBIx::Class::LookupColumn - DBIx::Class components to help using Lookup tables.
 
 =head1 VERSION
 
-Version 0.03
+Version 0.04
 
 =head1 SYNOPSIS
 
@@ -133,15 +133,16 @@ In this case the RoleType is the Lookup table and ActorRole the one the lookup r
 
  # In a script
  my $actor = $schema->resultset('Actor')->find ( 1 );
- my @roles_played = $actor->role_names();
 
- $actor->has_role ('Warlock');  # returns boolean
- # $actor->has_role ('Warloc');  # throws an exception because does not exist in the DB
+ # with DBIx::Class::LookupColumn package
+ my @roles_played = $actor->role_names(); # ONE and only one DB request whose result is cached
+ my $played_warlock = $actor->has_role ('Warlock');  # assigns boolean
+ # my $played_warlock = $actor->has_role ('Warloc');  # throws an exception because does not exist in the DB
 
  # inefficient classical way to do it
  my @roles_played_classical = map { $_->roletype()->name } $actor->actorroles(); # does a DB request at EACH loop !
- my $played_warlock =  'Warlock' ~~ @roles_played_classical; # assigns boolean 
- # my $played_warlock =  'Warloc' ~~ @roles_played_classical; # assigns an empty string, NOT safe regarding TYPOS !
+ my $played_warlock_classical =  'Warlock' ~~ @roles_played_classical; # assigns boolean 
+ # my $played_warlock_classical =  'Warloc' ~~ @roles_played_classical; # assigns an empty string, NOT safe regarding TYPOS !
 
 =cut
 
