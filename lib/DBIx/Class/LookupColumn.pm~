@@ -8,7 +8,7 @@ DBIx::Class::LookupColumn - DBIx::Class components to help using Lookup tables.
 
 =head1 VERSION
 
-Version 0.07
+Version 0.05
 
 =head1 SYNOPSIS
 

@@ -55,6 +55,16 @@ ok( $played_warlock ~~ $played_warlock_classical, "checker : same result" );
 dies_ok{ $actor->has_role ( $wrong_value )} "throws an exception because $wrong_value does not exist in the DB";
 lives_ok{ $wrong_value ~~ @roles_played_classical } "does not throw an exception with the classical way";
 
-
+#my @angelina = $schema->resultset( 'Actor' )->search( {first_name => 'Angelina'} )->all;
+#my @actors_played_elf = grep { $_->has_role( 'Elf')  } $schema->resultset( 'Actor' )->all;
+#
+#print Dumper $actors_played_elf[0]->last_name;
+#print Dumper $actors_played_elf[1]->last_name;
+#
+##my @actors_played_elf_2 = $schema->resultset( 'Actor' )->search_related( 'actorroles')->search_related->( 'roletype' ,{name =>'Elf'} );
+#my @actors_played_elf_2 = $schema->resultset( 'Actor' )->search ( {roletype.name => 'Elf' }, {join => 'autorroles'}  );
+#
+#print Dumper $actors_played_elf_2[0]->last_name;
+#print Dumper $actors_played_elf_2[1]->last_name;
 
 done_testing;
