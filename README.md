@@ -1,7 +1,7 @@
 DBIx-Class-LookupColumn
 =======================
 
-dbic component generating accessors method to get data by a table pointing to a Lookup table (catalog of terms) in a efficient way (cache system)
+dbic component generating accessors method to get data by a table pointing to a Lookup table (catalog of terms) in a efficient way (cache system).
 
 Description
 --------------
@@ -12,7 +12,7 @@ on the top the DBIx::Class (object relational-mapping).
 Terminology
 ---------------
 
-What is meant as a lookup table is a table containing some terms definition, such as PermissionType (permission_id, name) with such data 
+What is meant as a Lookup table is a table containing some terms definition, such as PermissionType (permission_id, name) with such data 
 (1, 'Administrator'; 2, 'User'; 3, 'Guest') associated 
 with a client table such as User, whose metas might look like this : (id, first_name, last_name, permission_id).
 

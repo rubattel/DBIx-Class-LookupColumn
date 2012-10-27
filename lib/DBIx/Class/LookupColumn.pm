@@ -8,7 +8,7 @@ DBIx::Class::LookupColumn - DBIx::Class components to help using Lookup tables.
 
 =head1 VERSION
 
-Version 0.08
+Version 0.09
 
 =head1 SYNOPSIS
 
@@ -90,8 +90,8 @@ Do not use this module on I<big> tables, it could actually slow down your code a
 
 Suppose we have a many-to-many relationship between the B<Actor> and B<RoleType> tables. Then a new table, let's call it
 B<ActorRole>, has to be designed for playing the interface between them.
-In this case the RoleType is the Lookup table and ActorRole the one the lookup relation is called on. However let's add two suggar functions for
-applying the lookup relation on the Actor objects directly. 
+In this case the RoleType is the Lookup table and ActorRole the one the lookup relation is called on. However let's add two sugar functions for
+applying the getter and checker accessor on the Actor objects directly. 
 
  # In the Actor ResultSource
  # let's add both functions below as suggar

@@ -9,11 +9,11 @@ DBIx::Class::LookupColumn::LookupColumnComponent - A dbic component for building
 
 =head1 VERSION
 
-Version 0.07
+Version 0.09
 
 =cut
 
-our $VERSION = '0.07';
+our $VERSION = '0.09';
 
 use base qw(DBIx::Class);
 use Carp qw(confess);
@@ -183,33 +183,40 @@ sub add_lookup {
     
     my $meta = Class::MOP::Class->initialize($class) or die;
         # test if not already present
-        foreach my $method ( @$params{qw/name_accessor name_setter name_checker/} ) {
-            confess "ERROR: method $method already defined"
-                if $meta->get_method($method);
-        }
+	foreach my $method ( @$params{qw/name_accessor name_setter name_checker/} ) {
+		confess "ERROR: method $method already defined"
+	    	if $meta->get_method($method);
+	}
+	
+	my $is_immutable = $meta->is_immutable();
 
-        $meta->add_method( $params->{name_accessor}, sub {
-            my $self = shift; # $self isa Row
-            my $schema = $self->result_source->schema;
-            return DBIx::Class::LookupColumn::Manager->FETCH_NAME_BY_ID( $schema, $lookup_table, $field_name, $self->get_column($foreign_key) );
-        });
+	$meta->make_mutable if $is_immutable;
+	
+	$meta->add_method( $params->{name_accessor}, sub {
+		my $self = shift; # $self isa Row
+		my $schema = $self->result_source->schema;
+		return DBIx::Class::LookupColumn::Manager->FETCH_NAME_BY_ID( $schema, $lookup_table, $field_name, $self->get_column($foreign_key) );
+	});
         
         
-        $meta->add_method( $params->{name_setter}, sub {
-            my ($self, $new_name) = @_; 
-            my $schema = $self->result_source->schema;
-            my $id = $fetch_id_by_name->( $self, $new_name );
-            $self->set_column($foreign_key, $id);
-        });
+	$meta->add_method( $params->{name_setter}, sub {
+		my ($self, $new_name) = @_; 
+		my $schema = $self->result_source->schema;
+		my $id = $fetch_id_by_name->( $self, $new_name );
+		$self->set_column($foreign_key, $id);
+	});
         
 
-         $meta->add_method( $params->{name_checker}, sub {
-            my ($self, $name) = @_; # $self isa Row
-            my $schema = $self->result_source->schema;
-            my $id = $self->get_column( $foreign_key );
-            return unless defined $id;
-            return $fetch_id_by_name->( $self, $name ) eq $id;
-        });
+	$meta->add_method( $params->{name_checker}, sub {
+		my ($self, $name) = @_; # $self isa Row
+		my $schema = $self->result_source->schema;
+		my $id = $self->get_column( $foreign_key );
+		return unless defined $id;
+		return $fetch_id_by_name->( $self, $name ) eq $id;
+	});
+	
+	# was set as immutable then reset as such
+	$meta->make_immutable() if $is_immutable;
 }
 
 
